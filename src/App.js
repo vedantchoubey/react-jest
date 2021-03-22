@@ -1,21 +1,32 @@
-
+import React, { useState, useEffect } from "react";
 import './App.css';
-import Todo from './components/todo'
+
 function App() {
 
-  const todos = [
-    { id: 1, title:'to learn', complete: false, },
-    { id: 2, title:'to code', complete: false, },
-    { id: 3, title:'to test', complete: true, },
-  ];
+ 
+
+  const [joke, setJoke] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJoke = async () => {
+      const data = await fetch("https://api.chucknorris.io/jokes/random").then((res) => res.json());
+      setJoke(data);
+      setIsLoading(false);
+    };
+    fetchJoke();
+  }, []);
+
+  if(isLoading){
+    return<>is loading....</>
+  }
 
   return (
     <div className="App">
-      {todos.map((todo) => {
-        return (<Todo todo={todo}/>)
-      })
+      
+      <img src={joke.icon_url} alt="logo" />
+      <p>{joke.value}</p>
 
-      }
     </div>
   );
 }
